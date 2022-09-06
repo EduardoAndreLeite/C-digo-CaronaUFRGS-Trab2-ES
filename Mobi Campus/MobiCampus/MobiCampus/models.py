@@ -32,7 +32,7 @@ class Motorista(Usuario):
         return super().__str__()
 
 class Carona(models.Model):
-    motorista=models.OneToOneField(Motorista, on_delete=models.CASCADE)
+    motorista=models.ForeignKey(Motorista, on_delete=models.CASCADE)
     caronaId = models.AutoField(primary_key=True)
     origem=models.CharField(max_length=max_tam_string)
     destino=models.CharField(max_length=max_tam_string)
@@ -43,7 +43,7 @@ class Carona(models.Model):
 
 class CaronaAux(models.Model):
     carona=models.OneToOneField(Carona, on_delete=models.CASCADE)
-    passageiro=models.OneToOneField(Usuario, on_delete=models.CASCADE, related_name="passageiro")
+    passageiro=models.ForeignKey(Usuario, on_delete=models.CASCADE, related_name="passageiro")
 
 
 

@@ -1,7 +1,7 @@
 from multiprocessing import context
 from django.shortcuts import render, get_object_or_404,get_list_or_404, HttpResponseRedirect
 from django.http import HttpResponse
-from .models import Usuario, Administrador, Motorista, Carona
+from .models import Usuario, Administrador, Motorista, Carona, CaronaAux
 from django.template import loader
 from django.http import Http404
 from .forms import Autenticacao, Pedido
@@ -76,6 +76,7 @@ def buscando_viagem(request, usuario_login):
     return HttpResponse(template.render(contexto, request))
 
 def resultado(request, usuario_login, busca):
+    
     origem, destino= busca.split('+')
     
     #regex para achar uma rota que contenha a origem e destino nesta ordem
@@ -89,4 +90,20 @@ def resultado(request, usuario_login, busca):
         'resultados_list':caronas,
     }
     
+    return HttpResponse(template.render(contexto, request))
+
+#responsável pela view do historico de viagens 
+def historico_viagem(request, usuario_login):
+
+    caronas = CaronaAux.objects.filter(passageiro_id=usuario_login).values()
+    setOfCaronaIds = [carona['carona_id'] for carona in caronas]
+    viagens = []
+    for id in setOfCaronaIds:
+        viagens.append(Carona.objects.filter(caronaId = id).values()[0])
+
+    contexto={
+        'historico_list':viagens,
+    }
+    
+    template=loader.get_template('MobiCampus/historico_viagem.html')
     return HttpResponse(template.render(contexto, request))

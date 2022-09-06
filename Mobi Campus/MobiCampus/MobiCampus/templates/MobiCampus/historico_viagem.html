@@ -1,0 +1,18 @@
+<p>Historico de Viagens:</p>
+<hr>
+{% if historico_list%} 
+    <ul>
+        {% for viagem in historico_list %}
+            <center> 
+                <p> Rota: {{viagem.rota}}</p>
+                <p> Motorista: {{viagem.motorista_id}}</p>
+                <p> Origem: {{viagem.origem}}</p>
+                <p> Destino: {{viagem.destino}}</p>
+                <p> Custo: {{viagem.custo}}</p>
+            </center>
+            <hr>
+        {% endfor %}
+    </ul>
+{% else %}
+    <center> <p> Sem viagens Disponíveis.</p></center>
+{% endif %}

@@ -9,4 +9,5 @@ urlpatterns = [
     path('<str:usuario_login>/motorista/', views.motorista, name='motorista'),
     path('<str:usuario_login>/buscando_viagem/', views.buscando_viagem, name='viagem'),
     path('<str:usuario_login>/buscando_viagem/<str:busca>', views.resultado, name='resultado'),
+    path('<str:usuario_login>/historico_viagem/', views.historico_viagem, name='historico'),
 ]

@@ -7,3 +7,8 @@
     {% csrf_token %}
     <center><button form="pressionar"> Buscar corrida </button> </center>
 </form>
+
+<form id="press" action="{% url 'historico' user.login %}" method="post">
+    {% csrf_token %}
+    <center><button form="press"> Histórico de viagens </button> </center>
+</form>
