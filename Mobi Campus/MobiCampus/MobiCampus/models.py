@@ -1,4 +1,5 @@
-from pyexpat import model
+
+from tkinter import CASCADE
 from django.db import models
 
 max_passageiros=4
@@ -35,15 +36,18 @@ class Carona(models.Model):
     motorista=models.ForeignKey(Motorista, on_delete=models.CASCADE)
     caronaId = models.AutoField(primary_key=True)
     origem=models.CharField(max_length=max_tam_string)
+    tempo=models.IntegerField()
     destino=models.CharField(max_length=max_tam_string)
     rota=models.CharField(max_length=max_rota)
     custo=models.IntegerField()
     finalizada=models.BooleanField(default=False)
     passageiros=models.SmallIntegerField(default=0)
 
-class CaronaAux(models.Model):
+
+class CaronaHist(models.Model):
     carona=models.OneToOneField(Carona, on_delete=models.CASCADE)
-    passageiro=models.ForeignKey(Usuario, on_delete=models.CASCADE, related_name="passageiro")
+    user=models.ForeignKey(Usuario, on_delete=models.CASCADE, related_name="user")
+    status=models.CharField(max_length=10)
 
 
 
