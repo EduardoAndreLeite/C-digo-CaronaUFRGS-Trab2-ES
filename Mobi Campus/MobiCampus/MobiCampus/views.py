@@ -26,16 +26,14 @@ def login_page(request):
                 error= loader.get_template('MobiCampus/index.html')
                 contexto={
                     'form': form,
-                    'erro': True,
                 }
                 return HttpResponse(error.render(contexto, request))
     else:
         form=Autenticacao()    
     
-    template = loader.get_template('MobiCampus/index.html')
+    template = loader.get_template('MobiCampus/login.html')
     contexto= {
         'form': form,
-        'erro': False,
         }
 
     return HttpResponse(template.render(contexto, request))
