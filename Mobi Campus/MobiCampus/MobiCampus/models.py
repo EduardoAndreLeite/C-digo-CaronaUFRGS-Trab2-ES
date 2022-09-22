@@ -1,6 +1,7 @@
 
 from tkinter import CASCADE
 from django.db import models
+from django.contrib.auth.models import User
 
 max_passageiros=4
 max_tam_string=50
@@ -10,15 +11,12 @@ max_rota=300
 
 # Create your models here.
 class Usuario(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
     numeros= ((1, '1'), (2,'2'), (3,'3'), (4,'4'), (5, '5'))
-    login=models.CharField(max_length=max_tam_string, primary_key=True)
-    nome=models.CharField(max_length=max_tam_string)
-    validado=models.BooleanField(default=False)
     aval=models.SmallIntegerField(default=5, choices=numeros)
-    senha=models.CharField(max_length=max_tam_senha)
     
     def __str__(self):
-        return self.nome
+        return self.user.username
 
 class Administrador(Usuario):
     permissao=models.BooleanField()
@@ -46,7 +44,7 @@ class Carona(models.Model):
 
 class CaronaHist(models.Model):
     carona=models.OneToOneField(Carona, on_delete=models.CASCADE)
-    user=models.ForeignKey(Usuario, on_delete=models.CASCADE, related_name="user")
+    user=models.ForeignKey(Usuario, on_delete=models.CASCADE, related_name="user_profile")
     status=models.CharField(max_length=10)
 
 

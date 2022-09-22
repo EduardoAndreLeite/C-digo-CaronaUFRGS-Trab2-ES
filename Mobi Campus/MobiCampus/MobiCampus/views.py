@@ -6,22 +6,24 @@ from .models import Usuario, Administrador, Motorista, Carona, CaronaHist
 from django.template import loader
 from django.http import Http404
 from .forms import Autenticacao, Pedido, InsercaoViagem
+from django.contrib.auth import authenticate, login
 
 ORIGENSEDESTINOS=['Campus do Vale', 'Campus Centro', 'Campus Olimpico', 'Campus Saude']
 RUAS=['Bento Goncalvez', 'Ipiranga', 'Dr.Salvador Franca', 'Borges de Medeiros']
 
 #Responsavel pela view da pagina inicial
 def login_page(request):
-    if(request.method=='POST'):
+    if request.method=='POST':
         form=Autenticacao(request.POST)
 
         if(form.is_valid()):
-            nome=form.cleaned_data['login']
+            username=form.cleaned_data['login']
             password=form.cleaned_data['senha']
-            user=get_object_or_404(Usuario, pk=nome)
+            user=authenticate(username=username, password=password)
             
-            if(user.senha==password):
-                return HttpResponseRedirect(nome)
+            if user is not None:
+                login(request, user)
+                return HttpResponseRedirect('home')
             else:
                 error= loader.get_template('MobiCampus/index.html')
                 contexto={
@@ -31,34 +33,37 @@ def login_page(request):
     else:
         form=Autenticacao()    
     
-    template = loader.get_template('MobiCampus/login.html')
-    contexto= {
-        'form': form,
+        template = loader.get_template('MobiCampus/login.html')
+        contexto= {
+            'form': form,
         }
 
     return HttpResponse(template.render(contexto, request))
 
 
 #Responsável pela view da pagina do usuario
-def detail(request, usuario_login):
-    user=get_object_or_404(Usuario, pk=usuario_login)
-    
+from django.contrib.auth.decorators import login_required
+
+@login_required
+def detail(request):
     template = loader.get_template('MobiCampus/detail.html')
     contexto={
-        'user':user,
+        'user':request.user,
     }
 
     return HttpResponse(template.render(contexto, request))
 
 #Responsavel pela view da página de um motorista
-def motorista(request, usuario_login):
-    user=get_object_or_404(Usuario, pk=usuario_login)
+@login_required
+def motorista(request):
+    user=request.user
 
-    return HttpResponse(user.nome)
+    return HttpResponse(user.get_username())
 
 
 #responsável pela view da página de busca 
-def buscando_viagem(request, usuario_login):
+@login_required
+def buscando_viagem(request):
     if(request.method=='POST'):
         form=Pedido(request.POST)
 
@@ -146,9 +151,10 @@ def CriarNovaCarona(request, usuario_login):
     return HttpResponse(template.render(context, request))
 
 #responsável pela view do historico de viagens 
-def historico_viagem(request, usuario_login):
-
-    caronas = CaronaHist.objects.filter(user_id=usuario_login).values()
+@login_required
+def historico_viagem(request):
+    user = request.user
+    caronas = CaronaHist.objects.filter(user=user.usuario).values()
     setOfCaronaIds = [carona['carona_id'] for carona in caronas]
     viagens = []
     for id in setOfCaronaIds:
