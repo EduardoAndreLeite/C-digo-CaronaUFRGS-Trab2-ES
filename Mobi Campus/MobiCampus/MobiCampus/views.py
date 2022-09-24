@@ -3,9 +3,10 @@ from random import randint, random
 from django.shortcuts import render, get_object_or_404,get_list_or_404, HttpResponseRedirect
 from django.http import HttpResponse
 from .models import Usuario, Administrador, Motorista, Carona, CaronaHist
+from django.contrib.auth.models import User
 from django.template import loader
 from django.http import Http404
-from .forms import Autenticacao, Pedido, InsercaoViagem
+from .forms import Autenticacao, Cadastro, Pedido, InsercaoViagem
 from django.contrib.auth import authenticate, login
 
 ORIGENSEDESTINOS=['Campus do Vale', 'Campus Centro', 'Campus Olimpico', 'Campus Saude']
@@ -40,6 +41,54 @@ def login_page(request):
 
     return HttpResponse(template.render(contexto, request))
 
+def login_invalido(username):
+    # True, se login é invalido (nao termina por @ufrgs.br)
+    # False, caso contrario
+    import re
+    return re.search(r"@ufrgs.br$", username) is None
+
+def signup_page(request):
+    if request.method=='POST':
+        form=Cadastro(request.POST)
+
+        if(form.is_valid()):
+            username=form.cleaned_data['login']
+            if len(User.objects.filter(username = username)) != 0:
+                # ja existe usuario ja cadastrado com esse login..
+                error= loader.get_template('MobiCampus/index1.html')
+                contexto={
+                    'form': form,
+                }
+                return HttpResponse(error.render(contexto, request))
+            if login_invalido(username):
+                error= loader.get_template('MobiCampus/index2.html')
+                contexto={
+                    'form': form,
+                }
+                return HttpResponse(error.render(contexto, request))
+
+            password=form.cleaned_data['senha']
+            password_confirmation = form.cleaned_data['confirmacao_senha']
+            if password != password_confirmation:
+                # senhas sao diferentes 
+                error= loader.get_template('MobiCampus/index3.html')
+                contexto={
+                    'form': form,
+                }
+                return HttpResponse(error.render(contexto, request))
+            novo_usuario = Usuario.objects.create_usuario(username, password)
+            novo_usuario.save()
+            login(request, novo_usuario.user)
+            return HttpResponseRedirect('home')
+    else:
+        form=Cadastro()    
+    
+        template = loader.get_template('MobiCampus/signup.html')
+        contexto= {
+            'form': form,
+        }
+
+    return HttpResponse(template.render(contexto, request))
 
 #Responsável pela view da pagina do usuario
 from django.contrib.auth.decorators import login_required
@@ -55,7 +104,7 @@ def detail(request):
 
 #Responsavel pela view da página de um motorista
 @login_required
-def motorista(request):
+def motorista_detail(request):
     user=request.user
 
     return HttpResponse(user.get_username())
