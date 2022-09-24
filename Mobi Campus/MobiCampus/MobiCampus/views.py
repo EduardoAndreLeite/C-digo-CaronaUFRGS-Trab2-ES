@@ -1,5 +1,6 @@
 from multiprocessing import context
 from random import randint, random
+from wsgiref import validate
 from django.shortcuts import render, get_object_or_404,get_list_or_404, HttpResponseRedirect
 from django.http import HttpResponse
 from .models import Usuario, Administrador, Motorista, Carona, CaronaHist
@@ -41,45 +42,32 @@ def login_page(request):
 
     return HttpResponse(template.render(contexto, request))
 
-def login_invalido(username):
-    # True, se login é invalido (nao termina por @ufrgs.br)
-    # False, caso contrario
-    import re
-    return re.search(r"@ufrgs.br$", username) is None
+
+def create_new_user(form):
+    username = form.cleaned_data['login']
+    password = form.cleaned_data['senha']
+    is_motorista = form.cleaned_data['motorista_check']
+    if is_motorista:
+        cnh = form.cleaned_data['cnh']
+        novo_motorista = Motorista.objects.create_motorista(username, password, cnh)
+        return novo_motorista
+    else:
+        novo_usuario = Usuario.objects.create_usuario(username, password)
+        return novo_usuario
 
 def signup_page(request):
     if request.method=='POST':
         form=Cadastro(request.POST)
-
         if(form.is_valid()):
-            username=form.cleaned_data['login']
-            if len(User.objects.filter(username = username)) != 0:
-                # ja existe usuario ja cadastrado com esse login..
-                error= loader.get_template('MobiCampus/index1.html')
-                contexto={
-                    'form': form,
-                }
-                return HttpResponse(error.render(contexto, request))
-            if login_invalido(username):
-                error= loader.get_template('MobiCampus/index2.html')
-                contexto={
-                    'form': form,
-                }
-                return HttpResponse(error.render(contexto, request))
-
-            password=form.cleaned_data['senha']
-            password_confirmation = form.cleaned_data['confirmacao_senha']
-            if password != password_confirmation:
-                # senhas sao diferentes 
-                error= loader.get_template('MobiCampus/index3.html')
-                contexto={
-                    'form': form,
-                }
-                return HttpResponse(error.render(contexto, request))
-            novo_usuario = Usuario.objects.create_usuario(username, password)
-            novo_usuario.save()
-            login(request, novo_usuario.user)
+            new_user = create_new_user(form)
+            login(request, new_user.user)
             return HttpResponseRedirect('home')
+        else:
+            template = loader.get_template('MobiCampus/signup.html')
+            contexto= {
+                'form': form,
+            }
+            return HttpResponse(template.render(contexto, request))
     else:
         form=Cadastro()    
     
