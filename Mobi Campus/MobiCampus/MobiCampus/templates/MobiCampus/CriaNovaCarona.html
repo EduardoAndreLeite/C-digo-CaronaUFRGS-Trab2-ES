@@ -16,5 +16,75 @@
 
 -->   
 
+<!--Comentário HTML-->
+<!--BASE Interface de Login-->
+{% load widget_tweaks %}
+<!DOCTYPE html>
+<html>
+
+<head>
+<title>Página Login MOBI CAMPUS</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<link rel="stylesheet" href="https://www.w3schools.com/lib/w3-theme-light-green.css">
+
+<style>
+html, body, h1, h2, h3, h4, h5
+</style>
+
+</head>
+
+<body class="w3-theme-15">
+
+<!--Banner Mobi Campus (Acrescentar Imagem Logo)-->
+<div class="w3-top">
+ <div class="w3-bar w3-theme-d2 w3-right-align w3-large">
+  <a class="w3-bar-item w3-button w3-hide-medium w3-hide-large w3-right w3-padding-large w3-hover-white w3-large w3-theme-d2" href="javascript:void(0);" onclick="openNav()"><i class="fa fa-bars"></i></a>
+  <a href="cadastro" class="w3-bar-item w3-button w3-padding-large w3-theme-d4"><i class="fa fa-home w3-margin-right"></i>Mobi Campus</a>  
+  </a>
+ </div>
+</div>
+
+<!--Form de Input para Login-->
+	<!--Botão de input-->
+<!-- Page Container -->
+<div class="w3-container w3-content" style="max-width:1400px;margin-top:80px;margin-bottom:120px">    
+	<!-- The Grid -->
+  <div class="w3-row">
+  
+  <!--conteúdo página-->
+    <div class="w3-col m7">
+      <div class="w3-container w3-white w3-round w3-margin"><br>
+        <form action="" target="_blank" method="post"> <!--ALTERAR AÇÃO PARA FUNÇÃO DE AUTENTICAÇÃO-->
+          {% csrf_token %} 
+	          <h1>Bem-vinda a Mobi-Campus, seu sistema de caronas para os campi UFRGS! </h1>
+	          <p>Por favor, insira os dados de sua viagem</p>
+	           <!--nome dos inputs: usuario e senha-->
+               <div class="form-group" >
+                {% render_field form.origem class="w3-input" type="text" placeholder="Origem" name="origem" %}
+               </div>
+               <div class="form-group" >
+                {% render_field form.destino class="w3-input" type="text" placeholder="Destino" name="destino" %}
+              </div>
+	  <br>		
+	  <a href="Em_Viagem/"><button type="submit" class="w3-button w3-theme-d1 w3-margin-bottom"><i class="fa"></i> Iniciar Viagem</button> </a>	
+	</form>
+      </div>     
+    </div>
+  
+    <!-- End Grid -->
+  </div>
+<!-- End Page Container -->
+</div>
+
+<!-- Footer -->
+<footer class="w3-container w3-theme-d5 w3-padding-8">
+  <h3>UM SISTEMA EM PARCERIA COM UNIVERSIDADE FEDERAL DO RIO GRANDE DO SUL - UFRGS</h3>
+  <p>ENGENHARIA DE SOFTWARE N 2022/1 - Projeto Mobi Campus</p>
+</footer>
+
+</body>
+</html> 
+
 
 

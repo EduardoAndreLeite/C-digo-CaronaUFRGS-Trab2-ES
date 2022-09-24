@@ -14,10 +14,10 @@ class UserManager(models.Manager):
         user = User.objects.create_user(username, 
                                         password=password)
         user.save()
-        if "first_name" in kwargs:
+        if "first_name" in kwargs.keys():
             user.first_name = kwargs["first_name"]
             user.save()
-        if "last_name" in kwargs:
+        if "last_name" in kwargs.keys():
             user.last_name = kwargs["last_name"]
             user.save()
         return self.create(user=user)
@@ -25,10 +25,10 @@ class UserManager(models.Manager):
         user = User.objects.create_user(username, 
                                         password=password)
         user.save()
-        if 'first_name' in kwargs:
+        if 'first_name' in kwargs.keys():
             user.first_name = kwargs['first_name']
             user.save()
-        if 'last_name' in kwargs:
+        if 'last_name' in kwargs.keys():
             user.last_name = kwargs['last_name']
             user.save()
         return self.create(user=user, cnh=cnh)
@@ -69,9 +69,15 @@ class Carona(models.Model):
 
 
 class CaronaHist(models.Model):
-    carona=models.OneToOneField(Carona, on_delete=models.CASCADE)
+    carona=models.ForeignKey(Carona, on_delete=models.CASCADE)
     user=models.ForeignKey(Usuario, on_delete=models.CASCADE, related_name="user_profile")
     status=models.CharField(max_length=10)
+
+class Solicitacao(models.Model):
+    Motorista=models.ForeignKey(Motorista, on_delete=models.CASCADE, related_name="Motorista")
+    Passageiro=models.ForeignKey(Usuario, on_delete=models.CASCADE, related_name="Passageiro")
+    Aceito= models.BooleanField()
+
 
 
 

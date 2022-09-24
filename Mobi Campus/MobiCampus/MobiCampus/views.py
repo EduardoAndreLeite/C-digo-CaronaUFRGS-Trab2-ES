@@ -3,7 +3,7 @@ from random import randint, random
 from wsgiref import validate
 from django.shortcuts import render, get_object_or_404,get_list_or_404, HttpResponseRedirect
 from django.http import HttpResponse
-from .models import Usuario, Administrador, Motorista, Carona, CaronaHist
+from .models import Usuario, Administrador, Motorista, Carona, CaronaHist, Solicitacao
 from django.contrib.auth.models import User
 from django.template import loader
 from django.http import Http404
@@ -27,7 +27,7 @@ def login_page(request):
                 login(request, user)
                 return HttpResponseRedirect('home')
             else:
-                error= loader.get_template('MobiCampus/index.html')
+                error= loader.get_template('MobiCampus/login.html')
                 contexto={
                     'form': form,
                 }
@@ -46,13 +46,16 @@ def login_page(request):
 def create_new_user(form):
     username = form.cleaned_data['login']
     password = form.cleaned_data['senha']
+    nome=form.cleaned_data['primeiro_nome']
+    sobrenome=form.cleaned_data['sobrenome']
+
     is_motorista = form.cleaned_data['motorista_check']
     if is_motorista:
         cnh = form.cleaned_data['cnh']
-        novo_motorista = Motorista.objects.create_motorista(username, password, cnh)
+        novo_motorista = Motorista.objects.create_motorista(username, password, cnh, first_name=nome, last_name=sobrenome)
         return novo_motorista
     else:
-        novo_usuario = Usuario.objects.create_usuario(username, password)
+        novo_usuario = Usuario.objects.create_usuario(username, password, first_name=nome, last_name=sobrenome)
         return novo_usuario
 
 def signup_page(request):
@@ -85,7 +88,8 @@ from django.contrib.auth.decorators import login_required
 def detail(request):
     template = loader.get_template('MobiCampus/detail.html')
     contexto={
-        'user':request.user,
+        'user':request.user.first_name,
+        'nota':request.user.usuario.aval,
     }
 
     return HttpResponse(template.render(contexto, request))
@@ -95,7 +99,14 @@ def detail(request):
 def motorista_detail(request):
     user=request.user
 
-    return HttpResponse(user.get_username())
+    template=loader.get_template('MobiCampus/Pag_Motorista.html')
+
+    contexto={
+        'Motorista':user.get_username(),
+        'Nota':user.usuario.aval,
+    }
+    
+    return HttpResponse(template.render(contexto, request))
 
 
 #responsável pela view da página de busca 
@@ -145,9 +156,10 @@ def randomizador_rota(origem, destino):
     return rota
 
 #Realiza a inserção de uma viagem no sistema
-def CriarNovaCarona(request, usuario_login):
+@login_required
+def CriarNovaCarona(request):
     template=loader.get_template('MobiCampus/CriaNovaCarona.html')  
-    
+    user=request.user
     if(request.method=='POST'):
         form=InsercaoViagem(request.POST)
 
@@ -157,9 +169,9 @@ def CriarNovaCarona(request, usuario_login):
            rota=randomizador_rota(origem, destino)
 
            if (origem in ORIGENSEDESTINOS and destino in ORIGENSEDESTINOS):
-                viagem=Carona(origem=origem, destino=destino, rota=rota, tempo=randint(0,90), motorista=get_object_or_404(Motorista, pk=usuario_login), custo=randint(1, 25))
+                viagem=Carona(origem=origem, destino=destino, rota=rota, tempo=randint(0,90), motorista=user.usuario.motorista, custo=randint(1, 25))
                 viagem.save()
-                hist_inst=CaronaHist(user=get_object_or_404(Usuario, pk=usuario_login), carona=viagem.caronaId, status='Passageiro')
+                hist_inst=CaronaHist(user=request.user.usuario, carona=viagem, status='Motorista')
                 hist_inst.save()
                 
                 context=  { 
@@ -168,7 +180,7 @@ def CriarNovaCarona(request, usuario_login):
                     'erro': False, 
                     }
 
-                return HttpResponse(template.render(context, request))
+                return HttpResponseRedirect('Em_Viagem')
            else:
                 context=  { 
                     'form': form,
@@ -203,3 +215,38 @@ def historico_viagem(request):
     
     template=loader.get_template('MobiCampus/historico_viagem.html')
     return HttpResponse(template.render(contexto, request))
+
+#função a ser ativada quando o usuário for pedir uma corrida 
+def Solicitar_Carona(request, Motorista):
+    user=request.user
+    sol=Solicitacao.objects.create(Passageiro=user.usuario, Motorista=Motorista)
+    sol.save()
+
+def Em_Viagem(request):
+    user=request.user
+    solicitacoes=Solicitacao.objects.filter(Motorista=user.usuario)
+
+    template=loader.get_template('MobiCampus/Em_Viagem.html')
+
+    context={
+        'Pedidos':solicitacoes,
+    }
+
+    return HttpResponse(template.render(context, request))
+
+def Aceitar_Carnoa(request, Pedido):
+    Pedido.Aceito=True
+    user=request.user
+    motorista=user.Motorista
+    caronas=Carona.objects.filter(Motorista=motorista, finalizada=False)
+    carona=Carona.objects.get(caronaId=caronas['caronaId'])
+    carona.passageiros+=1
+    carona.save()
+
+    return HttpResponseRedirect('/motorista/Em_Viagem/')
+    
+
+
+
+
+

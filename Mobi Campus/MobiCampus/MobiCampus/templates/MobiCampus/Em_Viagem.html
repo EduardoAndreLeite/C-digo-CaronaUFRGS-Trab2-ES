@@ -1,0 +1,14 @@
+
+
+{% if Pedidos %}
+    <div>
+        {% for pedido in Pedidos %}
+            <center>
+                <button type="submit">{{pedido.Passageiro}}</button>
+            </center>
+        {% endfor %}
+    </div>
+{% else %} 
+    <center> Sem pedidos </center>
+{% endif %}
+
