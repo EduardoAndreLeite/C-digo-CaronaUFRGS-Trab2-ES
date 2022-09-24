@@ -75,8 +75,10 @@ class CaronaHist(models.Model):
 
 class Solicitacao(models.Model):
     Motorista=models.ForeignKey(Motorista, on_delete=models.CASCADE, related_name="Motorista")
-    Passageiro=models.ForeignKey(Usuario, on_delete=models.CASCADE, related_name="Passageiro")
-    Aceito= models.BooleanField()
+    Passageiro=models.OneToOneField(Usuario, on_delete=models.CASCADE, related_name="Passageiro")
+    Id=models.AutoField(primary_key=True)
+    Carona=models.ForeignKey(Carona, on_delete=models.CASCADE)
+    Aceito= models.BooleanField(default=False)
 
 
 

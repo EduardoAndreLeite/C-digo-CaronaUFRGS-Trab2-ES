@@ -1,11 +1,10 @@
 <!--Comentário HTML-->
 <!--BASE Interface de Login-->
-{% load widget_tweaks %}
 <!DOCTYPE html>
 <html>
 
 <head>
-<title>Página Login MOBI CAMPUS</title>
+<title>Página do Motorista no MOBI CAMPUS</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
 <link rel="stylesheet" href="https://www.w3schools.com/lib/w3-theme-light-green.css">
@@ -37,22 +36,17 @@ html, body, h1, h2, h3, h4, h5
   <!--conteúdo página-->
     <div class="w3-col m7">
       <div class="w3-container w3-white w3-round w3-margin"><br>
-        <form action="" target="_blank" method="post"> <!--ALTERAR AÇÃO PARA FUNÇÃO DE AUTENTICAÇÃO-->
-          {% csrf_token %} 
-	          <h1>Bem-vinda a Mobi-Campus, seu sistema de caronas para os campi UFRGS! </h1>
-	          <p>Favor colocar sua localização atual e destino desejado</p>
-               <div class="form-group" >
-                {% render_field form.origem class="w3-input" type="text" placeholder="Origem" name="origem" %}
-               </div>
-               <div class="form-group" >
-                {% render_field form.destino class="w3-input" type="text" placeholder="Destino" name="destino" %}
-              </div>
-              <div class="form-group" >
-                {% render_field form.tempo class="w3-input" type="number" placeholder="Tempo(Em minutos)" name="tempo" %}
-              </div>
-	  <br>		
-	  <button type="submit" class="w3-button w3-theme-d1 w3-margin-bottom"><i class="fa"></i> Buscar </button> 
-	</form>
+        <center>
+            {% if Pedido %}
+                {% if Pedido.Aceito %}
+                    <h1>Pedido Aceito, favor ficar num local visível</h1>
+                {% else %}
+                    <h1>Aguardando confirmação</h1>
+                {% endif %}
+            {% else %}
+                <a href="{% url 'viagem' %}" class="w3-button w3-theme-d5 w3-margin-bottom"><i class="fa"></i>Seu pedido foi negado, retornar a area de busca</a>
+            {% endif%}
+        </center>
       </div>     
     </div>
   
@@ -69,14 +63,4 @@ html, body, h1, h2, h3, h4, h5
 
 </body>
 </html> 
-
-
-
-<form action="" method="post">
-    {% csrf_token %}
-    {{ form }}
-    <input type="submit" value="Submit">
-</form>
-
-
 

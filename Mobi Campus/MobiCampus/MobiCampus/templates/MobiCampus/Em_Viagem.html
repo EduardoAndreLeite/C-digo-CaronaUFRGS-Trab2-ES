@@ -1,14 +1,81 @@
+<!--Comentário HTML-->
+<!--BASE Interface de Login-->
+<!DOCTYPE html>
+<html>
 
+<head>
+<title>Página do Motorista no MOBI CAMPUS</title>
+{% load static %}
+<link rel="stylesheet" href="{% static 'MobiCampus/buttonStyle.css' %}">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<link rel="stylesheet" href="https://www.w3schools.com/lib/w3-theme-light-green.css">
 
-{% if Pedidos %}
-    <div>
-        {% for pedido in Pedidos %}
-            <center>
-                <button type="submit">{{pedido.Passageiro}}</button>
-            </center>
-        {% endfor %}
+<style>
+html, body, h1, h2, h3, h4, h5
+</style>
+
+</head>
+
+<body class="w3-theme-15">
+
+<!--Banner Mobi Campus (Acrescentar Imagem Logo)-->
+<div class="w3-top">
+ <div class="w3-bar w3-theme-d2 w3-right-align w3-large">
+  <a class="w3-bar-item w3-button w3-hide-medium w3-hide-large w3-right w3-padding-large w3-hover-white w3-large w3-theme-d2" href="javascript:void(0);" onclick="openNav()"><i class="fa fa-bars"></i></a>
+  <a href="{% url 'login_page' %}" class="w3-bar-item w3-button w3-padding-large w3-theme-d4"><i class="fa fa-home w3-margin-right"></i>Mobi Campus</a>  
+  </a>
+ </div>
+</div>
+
+<!--Form de Input para Login-->
+	<!--Botão de input-->
+<!-- Page Container -->
+<div class="w3-container w3-content" style="max-width:1400px;margin-top:80px;margin-bottom:120px">    
+	<!-- The Grid -->
+  <div class="w3-row">
+  
+  <!--conteúdo página-->
+    <div class="w3-col m7">
+      <div class="w3-container w3-white w3-round w3-margin"><br>
+        <center>
+            {% if Pedidos %}
+                {% for pedido in Pedidos %}
+                  {% if not pedido.Aceito %}
+                    <h2 style="display: inline; padding: 6mm;">{{pedido.Passageiro.user.first_name}}</h2>
+                    <a href="{% url 'Aceitar' pedido.Id %}" class="accept">Aceitar</a> 
+                    <a href="{% url 'Negar' pedido.Id %}" class="deny">Negar</a>
+                  {% endif %}
+                {% endfor %}
+            {% else %}
+                    <h1> Sem pedidos no momento</h1>
+            {% endif %}
+
+            {% if Passageiros %}
+                <h1>Passageiros presentes na viagem:</h1>
+                {% for passageiro in Passageiros %}
+                    <h1>{{passageiro.user.user.first_name}}</h1>
+                {% endfor %}
+            {% else %}
+                    <h1> Sem nenhum passageiro no momento</h1>
+            {% endif %}
+
+            <a type="button" href="{% url 'Finalizar' %}" class="w3-button w3-theme-d5 w3-margin-bottom"><i class="fa"></i> Finalizar Viagem</a> 
+        </center>
+      </div>     
     </div>
-{% else %} 
-    <center> Sem pedidos </center>
-{% endif %}
+  
+    <!-- End Grid -->
+  </div>
+<!-- End Page Container -->
+</div>
+
+<!-- Footer -->
+<footer class="w3-container w3-theme-d5 w3-padding-8">
+  <h3>UM SISTEMA EM PARCERIA COM UNIVERSIDADE FEDERAL DO RIO GRANDE DO SUL - UFRGS</h3>
+  <p>ENGENHARIA DE SOFTWARE N 2022/1 - Projeto Mobi Campus</p>
+</footer>
+
+</body>
+</html> 
 

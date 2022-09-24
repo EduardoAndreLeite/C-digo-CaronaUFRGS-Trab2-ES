@@ -1,3 +1,5 @@
+from ast import Delete
+from asyncio.windows_events import NULL
 from multiprocessing import context
 from random import randint, random
 from wsgiref import validate
@@ -88,8 +90,8 @@ from django.contrib.auth.decorators import login_required
 def detail(request):
     template = loader.get_template('MobiCampus/detail.html')
     contexto={
-        'user':request.user.first_name,
-        'nota':request.user.usuario.aval,
+        'user':request.user,
+        'motor': request.user.usuario in Usuario.objects.filter(motorista__isnull=False),
     }
 
     return HttpResponse(template.render(contexto, request))
@@ -102,8 +104,7 @@ def motorista_detail(request):
     template=loader.get_template('MobiCampus/Pag_Motorista.html')
 
     contexto={
-        'Motorista':user.get_username(),
-        'Nota':user.usuario.aval,
+        'Motorista':user,
     }
     
     return HttpResponse(template.render(contexto, request))
@@ -138,12 +139,11 @@ def resultado(request, busca, tempo):
     #regex para achar uma rota que contenha a origem e destino nesta ordem
     matcher='[a-zA-Z ,]*'+origem+'[a-zA-Z ,]*'+destino+'[a-zA-Z ,]*'
 
-    caronas=Carona.objects.filter(rota__regex=matcher, passageiros__lt=4).values()
-    caronas.filter(tempo__lte=tempo)
+    caronas=Carona.objects.filter(rota__regex=matcher, passageiros__lt=4, tempo__lte=tempo, finalizada=False).values()
     template=loader.get_template('MobiCampus/resultados_busca.html')
 
     contexto={
-        'resultados_list':caronas,
+        'caronas':caronas,
     }
     
     return HttpResponse(template.render(contexto, request))
@@ -160,25 +160,24 @@ def randomizador_rota(origem, destino):
 def CriarNovaCarona(request):
     template=loader.get_template('MobiCampus/CriaNovaCarona.html')  
     user=request.user
+
+    if(Carona.objects.filter(motorista=user.usuario.motorista, finalizada=False).count()!=0):
+        return HttpResponseRedirect('Em_Viagem')
+
     if(request.method=='POST'):
         form=InsercaoViagem(request.POST)
 
         if(form.is_valid()):
            origem=form.cleaned_data['origem']
            destino=form.cleaned_data['destino']
+           tempo=form.cleaned_data['tempo']
            rota=randomizador_rota(origem, destino)
 
            if (origem in ORIGENSEDESTINOS and destino in ORIGENSEDESTINOS):
-                viagem=Carona(origem=origem, destino=destino, rota=rota, tempo=randint(0,90), motorista=user.usuario.motorista, custo=randint(1, 25))
+                viagem=Carona(origem=origem, destino=destino, rota=rota, tempo=tempo, motorista=user.usuario.motorista, custo=randint(1, 25))
                 viagem.save()
                 hist_inst=CaronaHist(user=request.user.usuario, carona=viagem, status='Motorista')
                 hist_inst.save()
-                
-                context=  { 
-                    'form': form,
-                    'comecado':True,
-                    'erro': False, 
-                    }
 
                 return HttpResponseRedirect('Em_Viagem')
            else:
@@ -217,33 +216,76 @@ def historico_viagem(request):
     return HttpResponse(template.render(contexto, request))
 
 #função a ser ativada quando o usuário for pedir uma corrida 
-def Solicitar_Carona(request, Motorista):
+def Solicitar_Carona(request, carona):
     user=request.user
-    sol=Solicitacao.objects.create(Passageiro=user.usuario, Motorista=Motorista)
+    Motorista=Carona.objects.get(pk=carona).motorista
+
+    if(Solicitacao.objects.filter(Passageiro=user.usuario).count()!=0):
+        return HttpResponseRedirect('/MobiCampus/pedido/aguardando/')
+
+    sol=Solicitacao.objects.create(Passageiro=user.usuario, Motorista=Motorista, Carona=Carona.objects.get(pk=carona))
     sol.save()
+    return HttpResponseRedirect('/MobiCampus/pedido/aguardando/')
 
 def Em_Viagem(request):
     user=request.user
     solicitacoes=Solicitacao.objects.filter(Motorista=user.usuario)
+    carona=Carona.objects.get(motorista=user.usuario, finalizada=False)
+    passageiros=CaronaHist.objects.filter(carona=carona, status='Passageiro')
 
     template=loader.get_template('MobiCampus/Em_Viagem.html')
 
     context={
         'Pedidos':solicitacoes,
+        'Passageiros':passageiros
     }
 
     return HttpResponse(template.render(context, request))
 
-def Aceitar_Carnoa(request, Pedido):
+def Aguardar(request):
+    Pedido=Solicitacao.objects.filter(Passageiro=request.user.usuario)
+
+    template=loader.get_template('MobiCampus/Aguardando.html')
+    contexto={
+        'Pedido':Pedido,
+    }
+
+    return HttpResponse(template.render(contexto, request))
+
+def Aceitar_Carona(request, identificador):
+    Pedido=Solicitacao.objects.get(Id=identificador)
     Pedido.Aceito=True
+    Pedido.save()
     user=request.user
-    motorista=user.Motorista
-    caronas=Carona.objects.filter(Motorista=motorista, finalizada=False)
-    carona=Carona.objects.get(caronaId=caronas['caronaId'])
+    motorista=user.usuario.motorista
+    carona=Carona.objects.get(motorista=motorista, finalizada=False)
+    hist_inst=CaronaHist(user=Pedido.Passageiro, carona=carona, status='Passageiro')
+    hist_inst.save()
     carona.passageiros+=1
     carona.save()
 
-    return HttpResponseRedirect('/motorista/Em_Viagem/')
+    return HttpResponseRedirect('/MobiCampus/motorista/Em_Viagem')
+
+def Negar_Carona(request, identificador):
+    Solicitacao.objects.get(Id=identificador).delete()
+
+    return HttpResponseRedirect('/MobiCampus/motorista/Em_Viagem')
+
+
+def Finalizar_Carona(request):
+    
+    user=request.user
+    solicitacoes=Solicitacao.objects.filter(Motorista=user.usuario.motorista)
+
+    for solicitacao in solicitacoes:
+        solicitacao.delete()
+
+    carona =Carona.objects.get(motorista=user.usuario.motorista, finalizada=False)
+    carona.finalizada=True
+    carona.save()
+    
+    return HttpResponseRedirect('/MobiCampus/home')
+
     
 
 
