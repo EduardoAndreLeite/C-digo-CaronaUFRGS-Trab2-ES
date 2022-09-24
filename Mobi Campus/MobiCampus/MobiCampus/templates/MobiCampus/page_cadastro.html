@@ -1,0 +1,85 @@
+<!--Comentário HTML-->
+<!--BASE Interface de Login-->
+<!DOCTYPE html>
+<html>
+
+<head>
+<title>Cadastro - MOBI CAMPUS</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<link rel="stylesheet" href="https://www.w3schools.com/lib/w3-theme-light-green.css">
+
+<style>
+html, body, h1, h2, h3, h4, h5
+</style>
+
+</head>
+
+<body class="w3-theme-15">
+
+<!--Banner Mobi Campus (Acrescentar Imagem Logo)-->
+<div class="w3-top">
+ <div class="w3-bar w3-theme-d2 w3-right-align w3-large">
+  <a class="w3-bar-item w3-button w3-hide-medium w3-hide-large w3-right w3-padding-large w3-hover-white w3-large w3-theme-d2" href="javascript:void(0);" onclick="openNav()"><i class="fa fa-bars"></i></a>
+  <a href="#" class="w3-bar-item w3-button w3-padding-large w3-theme-d4"><i class="fa fa-home w3-margin-right"></i>Mobi Campus</a>  
+  </a>
+ </div>
+</div>
+
+<!--Form de Input para Login-->
+	<!--Botão de input-->
+<!-- Page Container -->
+<div class="w3-container w3-content" style="max-width:1400px;margin-top:80px;margin-bottom:120px">    
+	<!-- The Grid -->
+  <div class="w3-row">
+  
+  <!--conteúdo página-->
+    <div class="w3-col m7">
+      <div class="w3-container w3-white w3-margin"><br>
+        <form action="/action_page.php" target="_blank"> <!--ALTERAR AÇÃO PARA FUNÇÃO DE CRIAÇÃO DE USUÁRIO-->
+			<fieldset>
+			<!-- CADASTRO: preenche campos nome_usuario, usuario (nro cartão ufrgs), senha e tipo_usuario-->
+			<legend>Cadastro Mobi-Campus:</legend>
+			<br>
+			<label for="nome_usuario">Nome de usuário:</label><br>
+			<input class="w3-input" type="text" id="nome_usuario" placeholder="Nome" required name="nome_usuario" size="8">
+			
+			<label for="usuario">Cartão UFRGS (formato 00XXXXXX):</label><br>
+			<input class="w3-input" type="text" id="usuario" placeholder="Cartão UFRGS" required name="usuario" size="8"><br>
+			
+			<label for="senha">Senha: (<i>Para sua segurança, crie uma senha diferente da do portal da UFRGS!</i>)</label><br>
+			<input class="w3-input" type="text" id="senha" placeholder="Senha" required name="senha" size="8"><br>
+			
+			<label for="senha">Confirme sua senha:</label><br>
+			<input class="w3-input" type="text" id="senha" placeholder="Confirmar Senha" required name="senha" size="8"><br>
+			
+			<br>
+			<!--POR DEFAULT, TIPO USUÁRIO = PASSAGEIRO-->
+			<input type="checkbox" id="admin" name="tipo_usuario" value="motorista"> <!--flag motorista-->
+			<label for="tipo_usuario">Motorista</label>
+			<br>
+			
+			<input type="checkbox" id="admin" name="tipo_usuario_flag" value="Admin"> <!--flag admin - precisa ser duas flags diferentes pois o login como admin é separado-->
+			<label for="tipo_usuario_flag">Administrador</label>			
+			</fieldset>
+			
+			<br>			
+			<button type="submit" class="w3-button w3-theme-d1 w3-margin-bottom"><i class="fa"></i>  Cadastrar Usuário</button> 
+			
+		</form>
+      </div>     
+    </div>
+  
+    <!-- End Grid -->
+  </div>
+<!-- End Page Container -->
+</div>
+
+<!-- Footer -->
+<footer class="w3-container w3-theme-d5 w3-padding-8">
+  <h3>UM SISTEMA EM PARCERIA COM UNIVERSIDADE FEDERAL DO RIO GRANDE DO SUL - UFRGS</h3>
+  <p>ENGENHARIA DE SOFTWARE N 2022/1 - Projeto Mobi Campus</p>
+</footer>
+
+</body>
+</html> 

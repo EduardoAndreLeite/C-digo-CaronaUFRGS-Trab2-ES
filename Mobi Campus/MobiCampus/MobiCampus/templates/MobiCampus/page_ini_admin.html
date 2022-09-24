@@ -1,0 +1,134 @@
+<!--Comentário HTML-->
+<!--BASE Interface de Login-->
+<!DOCTYPE html>
+<html>
+
+<head>
+<title>HOME Admin - MOBI CAMPUS</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<link rel="stylesheet" href="https://www.w3schools.com/lib/w3-theme-light-green.css">
+
+<style>
+html, body, h1, h2, h3, h4, h5
+</style>
+
+</head>
+
+<body class="w3-theme-15">
+
+<!--Banner Mobi Campus (Acrescentar Imagem Logo)-->
+<div class="w3-top">
+ <div class="w3-bar w3-theme-d2 w3-right-align w3-large">
+  <a class="w3-bar-item w3-left w3-padding-large w3-theme-d4">Mobi Campus</a>  
+  <!--Botão sair - trocar href-->
+  <a href="#" class="w3-bar-item w3-right w3-button w3-padding-large w3-theme-d4">Sair</a>
+ </div>
+</div>
+
+<!-- Page Container -->
+<div class="w3-container w3-content" style="max-width:1400px;margin-top:80px">    
+  <!-- The Grid -->
+  <div class="w3-row">
+  
+    <!-- Coluna Esquerda -->
+    <div class="w3-col m3">
+      <!-- Profile -->
+      <div class="w3-card w3-round w3-white">
+        <div class="w3-container">
+         <h4 class="w3-center">NOME DO USUÁRIO</h4> <!--alterar para função que pega nome do usuário-->
+         <p class="w3-center"><img src="" class="w3-circle" style="height:106px;width:106px" alt="Avatar"></p> <!--ALTERAR PARA IMAGEM DO BANCO DE DADOS QUE O USUÁRIO POSSA ESCOLHER??-->
+         <hr>
+         <p><i class="w3-margin-right w3-text-theme"></i> Administrador</p>
+        </div>
+      </div>
+      <br>     
+    <!-- Fim da coluna esquerda -->
+    </div>
+    
+    <!-- Coluna central -->
+    <div class="w3-col m7">
+    
+      <div class="w3-row-padding">
+        <div class="w3-col m12">
+          <div class="w3-card w3-round w3-white">
+            <div class="w3-container w3-padding">
+			<!--insere tabela de pendências-->
+			
+				<!-- Accordion -->
+			  <div class="w3-card w3-round">
+				<div class="w3-white">
+				  
+				  <button onclick="Accordion('listapend')" class="w3-button w3-block w3-theme-l1 w3-left-align"><i class="w3-margin-right"></i> Pendências(x)</button>
+				  <div id="listapend" class="w3-hide w3-container">
+					<p>LISTAR PENDÊNCIAS</p>
+				  </div>
+				  
+				  <button onclick="Accordion('listauser')" class="w3-button w3-block w3-theme-l1 w3-left-align"><i class="w3-margin-right"></i> Usuários</button>
+				  <div id="listauser" class="w3-hide w3-container">
+					<p>LISTAR TODOS USUÁRIOS</p>
+				  </div>
+				  
+				  <button onclick="Accordion('listaviag')" class="w3-button w3-block w3-theme-l1 w3-left-align"><i class="w3-margin-right"></i> Viagens</button>
+				  <div id="listaviag" class="w3-hide w3-container">
+					<p>LISTAR TODAS VIAGENS</p>
+				  </div>
+				  
+				</div>      
+			  </div>
+			  <br>
+					  
+            </div>
+          </div>
+        </div>
+      </div>
+	  <!--Função para listar caronas?-->
+	  
+	  
+    <!-- Fim coluna central -->
+    </div>
+    
+    <!-- Coluna direita -->
+    <div class="w3-col m2">
+      <div class="w3-card w3-round w3-white w3-center">
+        <div class="w3-container">
+          <p>Mobi Campus</p>
+          <img src="https://independente.com.br/wp-content/uploads//2020/03/ufrgs.jpg" alt="ufrgs" style="width:100%;"> <!--alterar para imagem ufrgs-->
+          <p><i>Foto: Ramon Moser</i></p>
+          <p>DATA HORA</p> <!--ver função para mostrar data hora-->
+        </div>
+      </div>
+      <br>      
+    <!-- Fim coluna direita -->
+    </div>
+    
+  <!-- End Grid -->
+  </div>
+  
+<!-- End Page Container -->
+</div>
+<br>
+
+<!-- Footer -->
+<footer class="w3-container w3-theme-d5 w3-padding-8">
+  <h3>UM SISTEMA EM PARCERIA COM UNIVERSIDADE FEDERAL DO RIO GRANDE DO SUL - UFRGS</h3>
+  <p>ENGENHARIA DE SOFTWARE N 2022/1 - Projeto Mobi Campus</p>
+</footer>
+
+<script>
+// Accordion
+function Accordion(id) {
+  var x = document.getElementById(id);
+  if (x.className.indexOf("w3-show") == -1) {
+    x.className += " w3-show";
+    x.previousElementSibling.className += " w3-theme-d1";
+  } else { 
+    x.className = x.className.replace("w3-show", "");
+    x.previousElementSibling.className = 
+    x.previousElementSibling.className.replace(" w3-theme-d1", "");
+  }
+}
+</script>
+
+</body>
+</html> 
