@@ -1,0 +1,129 @@
+<!--Comentário HTML-->
+<!--BASE Interface de Login-->
+<!DOCTYPE html>
+<html>
+
+<head>
+<title>HOME - MOBI CAMPUS</title><!--USUÁRIO EM CARONA-->
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<link rel="stylesheet" href="https://www.w3schools.com/lib/w3-theme-light-green.css">
+
+<style>
+html, body, h1, h2, h3, h4, h5, th, td {
+  border-style: none;
+}
+
+
+</style>
+
+</head>
+
+<body class="w3-theme-15">
+
+<!-- Page Container -->
+<div class="w3-container w3-content" style="max-width:1400px;margin-top:80px">    
+  <!-- The Grid -->
+  <div class="w3-row">
+    
+    <!-- Coluna central -->
+    <div class="w3-col m7">
+    
+      <div class="w3-row-padding">
+        <div class="w3-col m12">
+          <div class="w3-card w3-round w3-white">
+		  <table style="width:100%">
+		  <tr>
+		  <!--table header-->
+			<th>NOME</th>
+			<th> BOTÃO 1</th>
+			<th> BOTÃO 2</th> <!--pode deletar os headers da tabela depois-->
+		  </tr>
+				{% for item in objs %}
+			<tr> 
+				 <td>{{ item.nome }}</td>
+				 <td>
+					 <form method="post" action=""> <!--DEFINIR AÇÃO DO BOTÃO 1-->
+					 <button type='submit'>Botão 1</button>
+					 </form>
+				 </td>
+				 <td>
+					 <form method="post" action=""> <!--DEFINIR AÇÃO DO BOTÃO 2-->
+					 <button type='submit'>Botão 2</button>
+					 </form>
+				 </td>
+			</tr>
+				{% endfor %}		  
+		  
+			</table>
+		  
+		  
+				
+          </div>
+        </div>
+      </div>
+	  <!--Função para listar caronas?-->
+	  
+	  
+    <!-- Fim coluna central -->
+    </div>
+    
+    <!-- Coluna direita -->
+    <div class="w3-col m2">
+      <div class="w3-card w3-round w3-white w3-center">
+        <div class="w3-container">
+          <p>Mobi Campus</p>
+          <img src="https://independente.com.br/wp-content/uploads//2020/03/ufrgs.jpg" alt="ufrgs" style="width:100%;"> <!--imagem ufrgs-->
+          <p><i>Foto: Ramon Moser</i></p>
+		  <p>
+		  <body onload="startTime()">
+		  <div id="txt"></div><!--função para mostrar data hora-->
+		  </p>
+        </div>
+      </div>
+      <br>      
+    <!-- Fim coluna direita -->
+    </div>
+    
+  <!-- End Grid -->
+  </div>
+  
+<!-- End Page Container -->
+</div>
+<br>
+
+<!-- Footer -->
+<footer class="w3-container w3-theme-d5 w3-padding-8">
+  <h3>UM SISTEMA EM PARCERIA COM UNIVERSIDADE FEDERAL DO RIO GRANDE DO SUL - UFRGS</h3>
+  <p>ENGENHARIA DE SOFTWARE N 2022/1 - Projeto Mobi Campus</p>
+</footer>
+
+
+<script type="text/javascript">
+function startTime()
+{
+	var today=new Date();
+	var h=today.getHours();
+	var m=today.getMinutes();
+	var s=today.getSeconds();
+	// add a zero in front of numbers<10
+	if (m<10)
+	{
+		m="0"+m;
+	}
+	if (h<10)
+	{
+		h="0"+h;
+	}
+	if (s<10)
+	{
+		s="0"+s;
+	}
+	document.getElementById('txt').innerHTML=h+":"+m+":"+s;
+	t=setTimeout('startTime()',500);
+}
+
+</script>
+
+</body>
+</html> 
