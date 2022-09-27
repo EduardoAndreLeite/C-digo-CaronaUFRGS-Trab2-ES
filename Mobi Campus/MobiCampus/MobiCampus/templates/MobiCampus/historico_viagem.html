@@ -1,18 +1,77 @@
-<p>Historico de Viagens:</p>
-<hr>
-{% if historico_list%} 
-    <ul>
-        {% for viagem in historico_list %}
-            <center> 
-                <p> Rota: {{viagem.rota}}</p>
-                <p> Motorista: {{viagem.motorista_id}}</p>
-                <p> Origem: {{viagem.origem}}</p>
-                <p> Destino: {{viagem.destino}}</p>
-                <p> Custo: {{viagem.custo}}</p>
-            </center>
-            <hr>
-        {% endfor %}
-    </ul>
-{% else %}
-    <center> <p> Sem viagens Disponíveis.</p></center>
-{% endif %}
+{% load widget_tweaks %}
+<!DOCTYPE html>
+<html>
+
+<head>
+<title>Histórico de Viagens MOBI CAMPUS</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<link rel="stylesheet" href="https://www.w3schools.com/lib/w3-theme-light-green.css">
+
+<style>
+html, body, h1, h2, h3, h4, h5
+</style>
+
+</head>
+
+<body class="w3-theme-15">
+
+<!--Banner Mobi Campus-->
+<div class="w3-top">
+ <div class="w3-bar w3-theme-d2 w3-right-align w3-large">
+  <a class="w3-bar-item w3-left w3-padding-large w3-theme-d4">Mobi Campus</a>  
+  <a href="{% url 'logout' %}" class="w3-bar-item w3-right w3-button w3-padding-large w3-theme-d4">Sair</a> <!--REFERÊNCIA LOGOUT CORRETA?-->
+ </div>
+</div>
+
+<!-- Page Container -->
+<div class="w3-container w3-content" style="max-width:1400px;margin-top:80px;margin-bottom:120px">    
+	<!-- The Grid -->
+  <div class="w3-row">
+  
+  <!--conteúdo página-->	
+	<div class="w3-row-padding">
+        <div class="w3-col m12">
+          <div class="w3-card w3-round w3-white">
+		  
+		  <div class="w3-container w3-white w3-round w3-margin"><br>			
+				<h1> {{user.first_name}} {{user.last_name}}</h1>
+				<h1> {{user.usuario.aval}}</h1>
+		  </div> 
+		  
+		  <table style="width:100%">
+			<tr>
+				<th>Histórico de Viagens:</th>
+			</tr>
+			{% if historico_list%} 
+					{% for viagem in historico_list %}
+						 
+							<tr><td> Rota: {{viagem.rota}}</td></tr>
+							<tr><td> Motorista: {{viagem.motorista_id}}</td></tr>
+							<tr><td> Origem: {{viagem.origem}}</td></tr>
+							<tr><td> Destino: {{viagem.destino}}</td></tr>
+							<tr><td> Custo: {{viagem.custo}}</td></tr>
+						
+						<hr>
+					{% endfor %}
+			{% else %}
+				<tr><td> Sem viagens Disponíveis.</td></tr>
+			{% endif %}
+			</table>
+          </div>
+        </div>
+    </div>
+  
+    <!-- End Grid -->
+  </div>
+<!-- End Page Container -->
+</div>
+
+<!-- Footer -->
+<footer class="w3-container w3-theme-d5 w3-padding-8">
+  <h3>UM SISTEMA EM PARCERIA COM UNIVERSIDADE FEDERAL DO RIO GRANDE DO SUL - UFRGS</h3>
+  <p>ENGENHARIA DE SOFTWARE N 2022/1 - Projeto Mobi Campus</p>
+</footer>
+
+</body>
+</html> 
