@@ -233,11 +233,12 @@ def Em_Viagem(request):
     carona=Carona.objects.get(motorista=user.usuario, finalizada=False)
     passageiros=CaronaHist.objects.filter(carona=carona, status='Passageiro')
 
-    template=loader.get_template('MobiCampus/Em_Viagem.html')
+    template=loader.get_template('MobiCampus/tabela_html.html')
 
     context={
         'Pedidos':solicitacoes,
-        'Passageiros':passageiros
+        'Passageiros':passageiros,
+        'viagem': carona,
     }
 
     return HttpResponse(template.render(context, request))
