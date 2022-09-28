@@ -121,7 +121,7 @@ def buscando_viagem(request):
             destino=form.cleaned_data['destino']
             tempo=form.cleaned_data['tempo']
 
-            return resultado(request, origem+'+'+destino, tempo)
+            return resultado(request, origem, destino, tempo)
     else:
         form=Pedido(request.POST)
     
@@ -132,14 +132,12 @@ def buscando_viagem(request):
     }
     return HttpResponse(template.render(contexto, request))
 
-def resultado(request, busca, tempo):
-    
-    origem, destino= busca.split('+')
+def resultado(request, origem, destino, tempo):
     
     #regex para achar uma rota que contenha a origem e destino nesta ordem
     matcher='[a-zA-Z ,]*'+origem+'[a-zA-Z ,]*'+destino+'[a-zA-Z ,]*'
 
-    caronas=Carona.objects.filter(rota__regex=matcher, passageiros__lt=4, tempo__lte=tempo, finalizada=False).values()
+    caronas=Carona.objects.filter(rota__regex=matcher,passageiros__lt=4,tempo__lte=tempo, finalizada=False).values()
     template=loader.get_template('MobiCampus/resultados_busca.html')
 
     contexto={
@@ -174,7 +172,7 @@ def CriarNovaCarona(request):
            rota=randomizador_rota(origem, destino)
 
            if (origem in ORIGENSEDESTINOS and destino in ORIGENSEDESTINOS):
-                viagem=Carona(origem=origem, destino=destino, rota=rota, tempo=tempo, motorista=user.usuario.motorista, custo=randint(1, 25))
+                viagem=Carona(origem=origem, destino=destino,passageiros=0, rota=rota, tempo=tempo, motorista=user.usuario.motorista, custo=randint(1, 25))
                 viagem.save()
                 hist_inst=CaronaHist(user=request.user.usuario, carona=viagem, status='Motorista')
                 hist_inst.save()
@@ -215,6 +213,7 @@ def historico_viagem(request):
     template=loader.get_template('MobiCampus/historico_viagem.html')
     return HttpResponse(template.render(contexto, request))
 
+@login_required
 #função a ser ativada quando o usuário for pedir uma corrida 
 def Solicitar_Carona(request, carona):
     user=request.user
@@ -227,6 +226,7 @@ def Solicitar_Carona(request, carona):
     sol.save()
     return HttpResponseRedirect('/MobiCampus/pedido/aguardando/')
 
+@login_required
 def Em_Viagem(request):
     user=request.user
     solicitacoes=Solicitacao.objects.filter(Motorista=user.usuario)
@@ -243,6 +243,7 @@ def Em_Viagem(request):
 
     return HttpResponse(template.render(context, request))
 
+@login_required
 def Aguardar(request):
     Pedido=Solicitacao.objects.filter(Passageiro=request.user.usuario)
 
@@ -253,6 +254,7 @@ def Aguardar(request):
 
     return HttpResponse(template.render(contexto, request))
 
+@login_required
 def Aceitar_Carona(request, identificador):
     Pedido=Solicitacao.objects.get(Id=identificador)
     Pedido.Aceito=True
@@ -267,12 +269,13 @@ def Aceitar_Carona(request, identificador):
 
     return HttpResponseRedirect('/MobiCampus/motorista/Em_Viagem')
 
+@login_required
 def Negar_Carona(request, identificador):
     Solicitacao.objects.get(Id=identificador).delete()
 
     return HttpResponseRedirect('/MobiCampus/motorista/Em_Viagem')
 
-
+@login_required
 def Finalizar_Carona(request):
     
     user=request.user
@@ -287,7 +290,15 @@ def Finalizar_Carona(request):
     
     return HttpResponseRedirect('/MobiCampus/home')
 
+def Viajando(request):
     
+    template=loader.get_template('Mobicampus/page_viagem_user.html')
+    
+    contexto={
+        'usuario':request.user.usuario,
+    }
+
+    return HttpResponse(template.render(contexto,request))
 
 
 

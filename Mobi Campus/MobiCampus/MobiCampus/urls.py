@@ -17,4 +17,5 @@ urlpatterns = [
     path('motorista/viagem_finalizada', views.Finalizar_Carona, name='Finalizar'),
     path('motorista/aceitar/<int:identificador>', views.Aceitar_Carona, name='Aceitar'),
     path('motorista/negar/<int:identificador>', views.Negar_Carona, name='Negar'),
+    path('passageiro_em_viagem/', views.Viajando, name='Viajando'),
 ]

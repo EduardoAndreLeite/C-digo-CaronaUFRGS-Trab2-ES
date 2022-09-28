@@ -39,8 +39,11 @@ html, body, h1, h2, h3, h4, h5
         <center>
             {% if caronas %}
                 {% for carona in caronas %}
-                    <a type="button" href="{% url 'pedido' carona.caronaId %}" class="w3-button w3-theme-d5 w3-margin-bottom"><i class="fa"></i> {{carona.rota}}</a> 
+                  <center> <a type="button" href="{% url 'pedido' carona.caronaId %}" class="w3-button w3-theme-d5 w3-margin-bottom"><i class="fa"></i> {{carona.rota}}</a>
+                  </center> 
                 {% endfor %}
+            {% else %}
+                  <center><p>Nenhuma viagem encontrada</p></center>
             {% endif %}
         </center>
       </div>     
