@@ -38,10 +38,14 @@ html, body, h1, h2, h3, h4, h5
         <center>
             <h1> {{user.first_name}} {{user.last_name}}</h1>
             <h1> {{user.usuario.aval}}</h1>
-            <a type="button" href="{% url 'viagem' %}"class="w3-button w3-theme-d5 w3-margin-bottom"><i class="fa">Buscar Viagem</a>
-            <a type="button" href="{% url 'historico' %}"class="w3-button w3-theme-d5 w3-margin-bottom"><i class="fa">Histórico de Viagem</a>
+	    {% if motor %}
+              <h1> {{Motorista.usuario.aval}}</h1>
+            {% endif %}
+            <a type="button" href="{% url 'viagem' %}"class="w3-button w3-theme-d5 w3-margin-bottom"><i class="fa">Pedir Carona</a>
+            <a type="button" href="{% url 'historico' %}"class="w3-button w3-theme-d5 w3-margin-bottom"><i class="fa">Meu Histórico de Viagem</a>
             {% if motor %}
-              <a type="button" href="{% url 'motorista' %}"class="w3-button w3-theme-d5 w3-margin-bottom"><i class="fa">Área do Motorista</a> 
+              <h1> {{Motorista.usuario.aval}}</h1>
+              <a type="button" href="adiciona_viagem" class="w3-button w3-theme-d5 w3-margin-bottom"><i class="fa"></i> Oferecer Nova Carona</a> 
             {% endif %}
         </center>
       </div>     
