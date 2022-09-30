@@ -38,8 +38,9 @@ html, body, h1, h2, h3, h4, h5
       <div class="w3-container w3-white w3-round w3-margin"><br>
         <center>
             {% if Pedido %}
-                {% if Pedido.Aceito %}
-                    <p>Pedido Aceito, favor direcionar-se para o local de embarque</p>
+                {% if Aceito %}
+                    <p>Pedido Aceito, favor vá para o local de embarque</p>
+                    <meta http-equiv='refresh' content='3; url= {% url 'Viajando' %}'>
                 {% else %}
                     <h1>Aguardando confirmação</h1>
                 {% endif %}

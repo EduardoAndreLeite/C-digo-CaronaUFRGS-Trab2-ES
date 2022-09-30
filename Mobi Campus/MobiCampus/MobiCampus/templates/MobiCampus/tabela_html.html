@@ -94,7 +94,7 @@ html, body, h1, h2, h3, h4, h5, th, td {
   		{% if Passageiros %}
 			<h1>Passageiros presentes na viagem:</h1>
 				{% for passageiro in Passageiros %}
-					<h1>{{passageiro.user.user.first_name}}</h1>
+					<h1>{{passageiro.user.user.first_name}} {{passageiro.user.user.last_name}}</h1>
 				{% endfor %}
 		{% else %}
 			<h1> Sem nenhum passageiro no momento</h1>

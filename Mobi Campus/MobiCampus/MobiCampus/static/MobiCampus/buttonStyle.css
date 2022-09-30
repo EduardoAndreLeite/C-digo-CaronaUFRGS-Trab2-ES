@@ -5,9 +5,8 @@
   .accept {
     color: #FFF;
     background: #44CC44;
-    padding: 15px 20px 30px 20px;
+    padding: 15px 20px 10px 20px;
     box-shadow: 0 4px 0 0 #2EA62E;
-    height: 10px;
   }
   .accept:hover {
     background: #6FE76F;
@@ -18,7 +17,6 @@
     background: tomato;
     padding: 15px 20px 10px 20px;;
     box-shadow: 0 4px 0 0 #CB4949;
-    height: 10px;
   }
   .deny:hover {
     background: rgb(255, 147, 128);

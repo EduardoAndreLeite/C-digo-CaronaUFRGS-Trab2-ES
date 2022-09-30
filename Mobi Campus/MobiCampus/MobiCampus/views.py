@@ -113,6 +113,9 @@ def motorista_detail(request):
 #responsável pela view da página de busca 
 @login_required
 def buscando_viagem(request):
+    if(Solicitacao.objects.filter(Passageiro=request.user.usuario, Aceito=True).count()!=0):
+        return HttpResponseRedirect('/MobiCampus/passageiro_em_viagem/')
+    
     if(request.method=='POST'):
         form=Pedido(request.POST)
 
@@ -135,13 +138,14 @@ def buscando_viagem(request):
 def resultado(request, origem, destino, tempo):
     
     #regex para achar uma rota que contenha a origem e destino nesta ordem
-    matcher='[a-zA-Z ,]*'+origem+'[a-zA-Z ,]*'+destino+'[a-zA-Z ,]*'
+    matcher='[a-zA-Z ,.]*'+origem+'[a-zA-Z ,.]*'+destino+'[a-zA-Z ,.]*'
 
     caronas=Carona.objects.filter(rota__regex=matcher,passageiros__lt=4,tempo__lte=tempo, finalizada=False).values()
     template=loader.get_template('MobiCampus/resultados_busca.html')
 
     contexto={
         'caronas':caronas,
+        'rotas':matcher,
     }
     
     return HttpResponse(template.render(contexto, request))
@@ -149,7 +153,7 @@ def resultado(request, origem, destino, tempo):
 #Devolve uma rota aleatória
 def randomizador_rota(origem, destino):
     maximo=len(RUAS)-1
-    rota=origem+' ,'+RUAS[randint(0, maximo)]+' ,'+RUAS[randint(0, maximo)]+' ,'+destino
+    rota=origem+','+RUAS[randint(0, maximo)]+','+RUAS[randint(0, maximo)]+','+destino
 
     return rota
 
@@ -248,8 +252,15 @@ def Aguardar(request):
     Pedido=Solicitacao.objects.filter(Passageiro=request.user.usuario)
 
     template=loader.get_template('MobiCampus/Aguardando.html')
+    
+    if(not Pedido):
+        aceito=False
+    else:
+        aceito=Pedido.values()[0]['Aceito']
+
     contexto={
         'Pedido':Pedido,
+        'Aceito':aceito,
     }
 
     return HttpResponse(template.render(contexto, request))
@@ -295,7 +306,7 @@ def Viajando(request):
     template=loader.get_template('Mobicampus/page_viagem_user.html')
     
     contexto={
-        'usuario':request.user.usuario,
+        'usuario':request.user,
     }
 
     return HttpResponse(template.render(contexto,request))
