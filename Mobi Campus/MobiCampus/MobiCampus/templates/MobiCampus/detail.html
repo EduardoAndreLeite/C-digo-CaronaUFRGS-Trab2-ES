@@ -45,7 +45,7 @@ html, body, h1, h2, h3, h4, h5
             <a type="button" href="{% url 'historico' %}"class="w3-button w3-theme-d5 w3-margin-bottom"><i class="fa">Meu Histórico de Viagem</a>
             {% if motor %}
               <h1> {{Motorista.usuario.aval}}</h1>
-              <a type="button" href="adiciona_viagem" class="w3-button w3-theme-d5 w3-margin-bottom"><i class="fa"></i> Oferecer Nova Carona</a> 
+              <a type="button" href={% url 'criarnovacarona' %} class="w3-button w3-theme-d5 w3-margin-bottom"><i class="fa"></i> Oferecer Nova Carona</a> 
             {% endif %}
         </center>
       </div>     

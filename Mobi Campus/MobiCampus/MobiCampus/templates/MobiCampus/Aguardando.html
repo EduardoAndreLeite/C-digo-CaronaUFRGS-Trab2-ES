@@ -39,8 +39,7 @@ html, body, h1, h2, h3, h4, h5
         <center>
             {% if Pedido %}
                 {% if Pedido.Aceito %}
-                    <p>Pedido Aceito</p>
-                    <meta http-equiv = "refresh" content = "5; url = {% url 'Viajando' %}" />
+                    <p>Pedido Aceito, favor direcionar-se para o local de embarque</p>
                 {% else %}
                     <h1>Aguardando confirmação</h1>
                 {% endif %}
