@@ -1,0 +1,75 @@
+<!--Comentário HTML-->
+<!--BASE Interface de Login-->
+<!DOCTYPE html>
+<html>
+
+<head>
+<title>Página do Motorista no MOBI CAMPUS</title>
+{% load static %}
+<link rel="stylesheet" href="{% static 'MobiCampus/buttonStyle.css' %}">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<link rel="stylesheet" href="https://www.w3schools.com/lib/w3-theme-light-green.css">
+
+<style>
+html, body, h1, h2, h3, h4, h5
+</style>
+
+</head>
+<title>Avaliação MOBI CAMPUS</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<link rel="stylesheet" href="https://www.w3schools.com/lib/w3-theme-light-green.css">
+
+<body class="w3-theme-15">
+
+<!--Banner Mobi Campus-->
+<div class="w3-top">
+ <div class="w3-bar w3-theme-d2 w3-right-align w3-large">
+  <a class="w3-bar-item w3-left w3-padding-large w3-theme-d4">Mobi Campus</a>  
+  <a href="{% url 'login_page' %}" class="w3-bar-item w3-right w3-button w3-padding-large w3-theme-d4">Sair</a> <!--REFERÊNCIA LOGOUT CORRETA?-->
+ </div>
+</div>
+  
+  
+<!-- Page Container -->
+<div class="w3-container w3-content" style="max-width:1400px;margin-top:80px;margin-bottom:120px">    
+	<!-- The Grid -->
+  <div class="w3-row">
+  
+  <!--conteúdo página-->
+     <div class="w3-col m7">
+      <div class="w3-container w3-white w3-round w3-margin"><br>
+	      
+	      <form action="" method="post">
+		    {% csrf_token %}
+		      <h1>Sua carona Terminou! </h1>
+			<p>Por favor avalie seu motorista</p>
+		       <div class="form-group" >
+          {%for radio in form.rating %}
+            <label for="{{ radio.id_for_label }}">
+            {{ radio.choice_label }}
+            <span class="radio">{{ radio.tag }}</span>
+            </label>
+          {% endfor %}
+		      </div>
+		    <input type="submit" class="w3-button w3-theme-d1 w3-margin-bottom" value="Finalizar">
+		</form>
+	    
+	  <br>	
+      </div>     
+    </div>
+  
+    <!-- End Grid -->
+  </div>
+<!-- End Page Container -->
+</div>
+
+<!-- Footer -->
+<footer class="w3-container w3-theme-d5 w3-padding-8">
+  <h3>UM SISTEMA EM PARCERIA COM UNIVERSIDADE FEDERAL DO RIO GRANDE DO SUL - UFRGS</h3>
+  <p>ENGENHARIA DE SOFTWARE N 2022/1 - Projeto Mobi Campus</p>
+</footer>
+
+</body>
+</html> 
