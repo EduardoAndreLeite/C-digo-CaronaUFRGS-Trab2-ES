@@ -41,10 +41,15 @@ html, body, h1, h2, h3, h4, h5
 		      <h1>Sua carona Terminou! </h1>
 			<p>Por favor avalie seu motorista</p>
 		       <div class="form-group" >
-          {%for radio in form.rating %}
-            <label for="{{ radio.id_for_label }}">
+          {%for radio in form.RATING %}
+          <span class="radio">{{ radio.tag }}</span>
             {{ radio.choice_label }}
-            <span class="radio">{{ radio.tag }}</span>
+
+            
+            <br>
+            <label for="{{ radio.id_for_label }}">
+              
+            
             </label>
           {% endfor %}
 		      </div>

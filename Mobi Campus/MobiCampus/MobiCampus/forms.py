@@ -1,5 +1,6 @@
 from unicodedata import name
 from django import forms
+from django.forms import ModelForm
 from django.core.validators import validate_email
 from django.core.exceptions import ValidationError
 
@@ -52,9 +53,15 @@ class InsercaoViagem(forms.Form):
     origem=forms.CharField(label='Origem', max_length=50)
     destino=forms.CharField(label='Destino', max_length=50)
     tempo=forms.IntegerField(label='Tempo')
-    
-class AvaliacaoForm(forms.Modelform):
-	rating = forms.CharField(widget=forms.RadioSelect(choices=((u'1',u'Péssimo'),(u'2',u'Ruim'),(u'3',u'Regular'),(u'4',u'Bom'),(u'5',u'Ótimo'))
-	class Meta:
-		model = Avaliacao
-		fields = ['rating']
+
+RATING = [
+(u'1',u'Péssimo'),
+(u'2',u'Ruim'),
+(u'3',u'Regular'),
+(u'4',u'Bom'),
+(u'5',u'Ótimo')
+]
+class AvaliacaoForm(forms.Form):
+	RATING = forms.CharField(widget=forms.RadioSelect(choices=RATING))
+
+

@@ -37,9 +37,11 @@ html, body, h1, h2, h3, h4, h5
       <div class="w3-container w3-white w3-round w3-margin"><br>
         <center>
             <h1> {{user.first_name}} {{user.last_name}}</h1>
-            <h1> {{user.usuario.aval}}</h1>
+            {%if not motor %}
+              <h1> {{user.usuario.aval}}</h1>
+            {% endif %}
 	    {% if motor %}
-              <h1> {{Motorista.usuario.aval}}</h1>
+              <h1> Rating: {{motorUser.rating}}</h1>
             {% endif %}
             <a type="button" href="{% url 'viagem' %}"class="w3-button w3-theme-d5 w3-margin-bottom"><i class="fa">Pedir Carona</a>
             <a type="button" href="{% url 'historico' %}"class="w3-button w3-theme-d5 w3-margin-bottom"><i class="fa">Meu Histórico de Viagem</a>

@@ -52,6 +52,8 @@ class Administrador(Usuario):
 
 class Motorista(Usuario):
     cnh=models.CharField(max_length=tam_cnh)
+    rating = models.DecimalField(max_digits=3,decimal_places=2,default=5.00)
+    totalNotas = models.SmallIntegerField(default=0)
 
     def __str__(self):
         return super().__str__()

@@ -1,5 +1,4 @@
 from ast import Delete
-from asyncio.windows_events import NULL
 from multiprocessing import context
 from random import randint, random
 from wsgiref import validate
@@ -9,7 +8,7 @@ from .models import Usuario, Administrador, Motorista, Carona, CaronaHist, Solic
 from django.contrib.auth.models import User
 from django.template import loader
 from django.http import Http404
-from .forms import Autenticacao, Cadastro, Pedido, InsercaoViagem
+from .forms import Autenticacao, Cadastro, Pedido, InsercaoViagem, AvaliacaoForm
 from django.contrib.auth import authenticate, login
 
 ORIGENSEDESTINOS=['Campus do Vale', 'Campus Centro', 'Campus Olimpico', 'Campus Saude']
@@ -92,6 +91,7 @@ def detail(request):
     contexto={
         'user':request.user,
         'motor': request.user.usuario in Usuario.objects.filter(motorista__isnull=False),
+        'motorUser': Motorista.objects.get(user=request.user) if request.user.usuario in Usuario.objects.filter(motorista__isnull=False) else None,
     }
 
     return HttpResponse(template.render(contexto, request))
@@ -291,15 +291,69 @@ def Finalizar_Carona(request):
     
     user=request.user
     solicitacoes=Solicitacao.objects.filter(Motorista=user.usuario.motorista)
+    #for solicitacao in solicitacoes:
+    #    solicitacao.delete()
 
-    for solicitacao in solicitacoes:
-        solicitacao.delete()
-
+  
     carona =Carona.objects.get(motorista=user.usuario.motorista, finalizada=False)
-    carona.finalizada=True
-    carona.save()
+    if(carona is not None):
+        carona.finalizada=True
+        carona.save()
+    
+    return HttpResponseRedirect('/MobiCampus/avaliacao')
+
+@login_required
+def Finalizar_Carona_Motorista(request):
+    print("here")
+    user=request.user
+    solicitacoes=Solicitacao.objects.filter(Motorista=user.usuario.motorista)
+    #for solicitacao in solicitacoes:
+    #    solicitacao.delete()
+
+  
+    carona =Carona.objects.get(motorista=user.usuario.motorista, finalizada=False)
+    if(carona is not None):
+        carona.finalizada=True
+        carona.save()
     
     return HttpResponseRedirect('/MobiCampus/home')
+
+@login_required
+def Avaliacao(request):
+    
+    if request.method=='POST':
+        form=AvaliacaoForm(request.POST)
+
+        if(form.is_valid()):
+            ratingCh=form.cleaned_data.get("RATING")
+            print(ratingCh)
+
+        user=request.user
+        solicitacoes=Solicitacao.objects.filter(Passageiro=user.usuario)
+
+        cnh = Solicitacao.objects.get(Passageiro=user.usuario).Motorista.cnh
+        totalNotas = Motorista.objects.get(cnh=cnh).totalNotas
+        
+        Motorista.objects.filter(cnh=cnh).update(totalNotas = totalNotas+1)
+        motoristaRating = Motorista.objects.get(cnh=cnh).rating
+        Motorista.objects.filter(cnh=cnh).update(rating = (motoristaRating*(totalNotas-1)+int(ratingCh))/(totalNotas))
+        print(cnh)
+
+
+        for solicitacao in solicitacoes:
+            solicitacao.delete()
+
+
+        return HttpResponseRedirect('/MobiCampus/home')
+    else:
+        form=AvaliacaoForm()    
+    
+        template = loader.get_template('MobiCampus/avaliacao.html')
+        contexto= {
+            'form': form,
+        }
+        
+    return HttpResponse(template.render(contexto, request))
 
 def Viajando(request):
     
