@@ -80,6 +80,11 @@ class Solicitacao(models.Model):
     Carona=models.ForeignKey(Carona, on_delete=models.CASCADE)
     Aceito= models.BooleanField(default=False)
 
-
+class Avaliacao(models.Model):
+	rating = models.CharField(
+	choices = ((u'1',u'Péssimo'),(u'2',u'Ruim'),(u'3',u'Regular'),(u'4',u'Bom'),(u'5',u'Ótimo')),
+	max_length = 1,
+	verbose_name = 'Avaliação'
+	)
 
 
