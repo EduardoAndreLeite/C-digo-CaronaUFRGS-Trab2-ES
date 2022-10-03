@@ -335,6 +335,8 @@ def Avaliacao(request):
         totalNotas = Motorista.objects.get(cnh=cnh).totalNotas
         
         Motorista.objects.filter(cnh=cnh).update(totalNotas = totalNotas+1)
+        totalNotas += 1
+        print(totalNotas)
         motoristaRating = Motorista.objects.get(cnh=cnh).rating
         Motorista.objects.filter(cnh=cnh).update(rating = (motoristaRating*(totalNotas-1)+int(ratingCh))/(totalNotas))
         print(cnh)
