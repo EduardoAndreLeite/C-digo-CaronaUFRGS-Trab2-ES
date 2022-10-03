@@ -9,7 +9,20 @@
 <link rel="stylesheet" href="https://www.w3schools.com/lib/w3-theme-light-green.css">
 
 <style>
-html, body, h1, h2, h3, h4, h5
+table{
+	border-collapse: collapse;
+}
+.hist{
+
+  border-bottom: 1px solid black;
+}
+.hist td{
+	padding: 10px;
+}
+
+th{
+	text-align: center;
+}
 </style>
 
 </head>
@@ -32,27 +45,27 @@ html, body, h1, h2, h3, h4, h5
   <!--conteúdo página-->	
 	<div class="w3-row-padding">
         <div class="w3-col m12">
-          <div class="w3-card w3-round w3-white">
+          <div style="padding:15px" class="w3-card w3-round w3-white">
 		  
 		  <div class="w3-container w3-white w3-round w3-margin"><br>			
 				<h1> {{user.first_name}} {{user.last_name}}</h1>
-				<h1> {{user.usuario.aval}}</h1>
+				<h1> Rating: {{user.usuario.aval}}</h1>
 		  </div> 
 		  
 		  <table style="width:100%">
-			<tr>
-				<th>Histórico de Viagens:</th>
-			</tr>
+
+				<caption style="padding-bottom: 20px;"><h2>Histórico de Viagens:</h2></caption>
+
 			{% if historico_list%} 
 					{% for viagem in historico_list %}
 						 
-							<tr><td> Rota: {{viagem.rota}}</td></tr>
-							<tr><td> Motorista: {{viagem.motorista_id}}</td></tr>
-							<tr><td> Origem: {{viagem.origem}}</td></tr>
-							<tr><td> Destino: {{viagem.destino}}</td></tr>
-							<tr><td> Custo: {{viagem.custo}}</td></tr>
+							<tr class="hist" ><td> Rota: {{viagem.rota}}</td>
+							<td > Motorista: {{viagem.motorista_id}}</td>
+							<td > Origem: {{viagem.origem}}</td>
+							<td > Destino: {{viagem.destino}}</td>
+							<td > Custo: {{viagem.custo}}</td></tr>
 						
-						<hr>
+						
 					{% endfor %}
 			{% else %}
 				<tr><td> Sem viagens Disponíveis.</td></tr>
